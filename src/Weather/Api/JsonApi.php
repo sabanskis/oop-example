@@ -5,7 +5,7 @@ namespace Weather\Api;
 use Weather\Model\NullWeather;
 use Weather\Model\Weather;
 
-class DbRepository implements DataProvider
+class JsonApi implements DataProvider
 {
     /**
      * @param \DateTime $date
@@ -45,18 +45,39 @@ class DbRepository implements DataProvider
     {
         $result = [];
         $data = json_decode(
-            file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Data.json'),
+            file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Weather.json'),
             true
         );
         foreach ($data as $item) {
             $record = new Weather();
             $record->setDate(new \DateTime($item['date']));
-            $record->setDayTemp($item['dayTemp']);
-            $record->setNightTemp($item['nightTemp']);
-            $record->setSky($item['sky']);
+            $record->setDayTemp($item['high']);
+            $record->setNightTemp($item['low']);
+            $record->setSky($this->getSkyValue($item['text']));
             $result[] = $record;
         }
 
         return $result;
     }
+
+    public function getSkyValue($skyString) {
+        if ($skyString == 'Cloudy') {
+            return 1;
+        }
+        else if ($skyString == 'Scattered Showers') {
+            return 2;
+        }
+
+        else if ($skyString == 'Breezy') {
+            return 3;
+        }
+        else if ($skyString == 'Partly Cloudy') {
+            return 1;
+        }
+        else if ($skyString == 'Mostly Cloudy') {
+            return 1;
+        }
+    }
 }
+
+

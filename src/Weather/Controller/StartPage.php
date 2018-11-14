@@ -7,22 +7,27 @@ use Weather\Model\NullWeather;
 
 class StartPage
 {
-    public function getTodayWeather(): array
+    public function getTodayWeather($param): array
     {
+
         try {
             $service = new Manager;
+            $service->setTransporter($param);
+
             $weather = $service->getTodayInfo();
         } catch (\Exception $exp) {
             $weather = new NullWeather();
         }
 
+
         return ['template' => 'today-weather.twig', 'context' => ['weather' => $weather]];
     }
 
-    public function getWeekWeather(): array
+    public function getWeekWeather($param): array
     {
         try {
             $service = new Manager;
+            $service->setTransporter($param);
             $weathers = $service->getWeekInfo();
         } catch (\Exception $exp) {
             $weathers = [];

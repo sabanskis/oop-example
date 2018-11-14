@@ -10,6 +10,8 @@ class Weather
         3 => 'sun'
     ];
 
+
+
     /**
      * @var integer
      */
